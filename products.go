@@ -39,13 +39,3 @@ func (products Products) List() (Products, error) {
 	json.Unmarshal(body, &products)
 	return products, err
 }
-
-// func main() {
-// 	var data Products
-// 	err := json.Unmarshal(body, &data)
-// 	if err != nil {
-// 		fmt.Println("something went wrong!")
-// 	}
-
-// 	fmt.Println(data.Products[0].AvailableOn)
-// }
