@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+type Data struct {
+	Products Products
+}
+
 type Products []Product
 
 type Product struct {
@@ -16,26 +20,26 @@ type Product struct {
 	AvailableOn string `json:"available_on"`
 }
 
-func (products Products) List() (Products, error) {
+func ProductsList() (products []*Product, err error) {
 	var reqBody io.Reader
 
 	reqBody = strings.NewReader("")
-	req, err := http.NewRequest("GET", "http://localhost:3000/api/products.json", reqBody)
+	req, err := http.NewRequest("GET", "https://gist.github.com/radar/7440196/raw/eea66a32c4446eb04532f8f286f3c065cc73fec2/products.json", reqBody)
 	if err != nil {
-		return products, err
+		return
 	}
 	// submit the http request
 	r, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return products, err
+		return
 	}
 
 	// read the body of the http message into a byte array
 	body, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
-		return products, err
+		return
 	}
 	json.Unmarshal(body, &products)
-	return products, err
+	return
 }

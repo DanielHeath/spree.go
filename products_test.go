@@ -7,7 +7,6 @@ import (
 )
 
 func TestListProducts(t *testing.T) {
-	products := Products.List()
-	fmt.Println(products[0].AvailableOn)
-
+	products, _ := ProductsList()
+	fmt.Println(products)
 }
