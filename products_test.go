@@ -3,13 +3,11 @@ package spree
 import (
 	"testing"
 	// "time"
-)
-
-var (
-	Products = new(ProductClient)
+	"fmt"
 )
 
 func TestListProducts(t *testing.T) {
-	products = Products.List()
+	products := Products.List()
+	fmt.Println(products[0].AvailableOn)
 
 }
