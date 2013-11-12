@@ -9,11 +9,7 @@ import (
 	"strings"
 )
 
-type ProductClient struct{}
-
-type Products struct {
-	Products []Product
-}
+type Products []Product
 
 type Product struct {
 	Name        string
