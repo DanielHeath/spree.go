@@ -2,44 +2,51 @@ package spree
 
 import (
 	"encoding/json"
-	// "fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
-	"strings"
 )
 
 type Data struct {
-	Products Products
+	Products []Product `json:"products"`
 }
 
-type Products []Product
-
 type Product struct {
-	Name        string
+	Name        string `json:"name"`
 	AvailableOn string `json:"available_on"`
 }
 
-func ProductsList() (products []*Product, err error) {
-	var reqBody io.Reader
+func MustProductsList() []Product {
+	result, err := ProductsList()
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
 
-	reqBody = strings.NewReader("")
-	req, err := http.NewRequest("GET", "https://gist.github.com/radar/7440196/raw/eea66a32c4446eb04532f8f286f3c065cc73fec2/products.json", reqBody)
+func ProductsList() ([]Product, error) {
+	body, err := getProductJson()
+	if err != nil {
+		return nil, err
+	}
+	return ParseProductJson(body)
+}
+
+func ParseProductJson(body []byte) (products []Product, err error) {
+	dat := Data{}
+	err = json.Unmarshal(body, &dat)
 	if err != nil {
 		return
 	}
-	// submit the http request
-	r, err := http.DefaultClient.Do(req)
+	return dat.Products, nil
+}
+
+func getProductJson() (body []byte, err error) {
+	r, err := http.Get("https://gist.github.com/radar/7440196/raw/eea66a32c4446eb04532f8f286f3c065cc73fec2/products.json")
 	if err != nil {
 		return
 	}
+	defer r.Body.Close()
 
 	// read the body of the http message into a byte array
-	body, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		return
-	}
-	err = json.Unmarshal(body, &products)
-	return
+	return ioutil.ReadAll(r.Body)
 }
