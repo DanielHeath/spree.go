@@ -40,6 +40,6 @@ func ProductsList() (products []*Product, err error) {
 	if err != nil {
 		return
 	}
-	json.Unmarshal(body, &products)
+	err = json.Unmarshal(body, &products)
 	return
 }
